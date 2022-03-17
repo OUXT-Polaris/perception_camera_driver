@@ -30,6 +30,7 @@ public:
   explicit Subscriber(
     const std::string & topic, const std::string & endpoint = perception_camera_driver::resolve(
                                  perception_camera_driver::Transport::kTcp, "localhost", 8000));
+  ~Subscriber();
   void startPoll();
   const std::string endpoint;
 

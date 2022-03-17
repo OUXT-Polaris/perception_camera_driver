@@ -25,6 +25,8 @@ Subscriber::Subscriber(const std::string & topic, const std::string & endpoint)
   thread_ = std::thread(&Subscriber::startPoll, this);
 }
 
+Subscriber::~Subscriber() { thread_.join(); }
+
 void Subscriber::startPoll()
 {
   while (rclcpp::ok()) {
