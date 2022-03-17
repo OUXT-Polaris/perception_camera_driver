@@ -12,17 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <memory>
 #include <perception_camera_driver/image_subscriber_component.hpp>
+#include <rclcpp/rclcpp.hpp>
+#include <string>
 
-namespace perception_camera_direver
+int main(int argc, char * argv[])
 {
-ImageSubscriberComponent::ImageSubscriberComponent(const rclcpp::NodeOptions & options)
-: rclcpp::Node("image_subscriber", options),
-  subscriber_(
-    zmqpp::context(), "image_raw",
-    perception_camera_driver::resolve(perception_camera_driver::Transport::kTcp, "*", 8000))
-{
+  rclcpp::init(argc, argv);
+  rclcpp::NodeOptions options;
+  auto component = std::make_shared<perception_camera_direver::ImageSubscriberComponent>(options);
+  rclcpp::spin(component);
+  rclcpp::shutdown();
+  return 0;
 }
-
-// void ImageSubscriberComponent::startPoll() {}
-}  // namespace perception_camera_direver

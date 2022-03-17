@@ -18,6 +18,8 @@
 #include <perception_camera_app.pb.h>
 
 #include <memory>
+#include <perception_camera_driver/endpoint.hpp>
+#include <rclcpp/rclcpp.hpp>
 #include <zmqpp/zmqpp.hpp>
 
 namespace perception_camera_direver
@@ -25,10 +27,17 @@ namespace perception_camera_direver
 class Subscriber
 {
 public:
-  explicit Subscriber(const zmqpp::context & context, const std::string & topic);
+  explicit Subscriber(
+    const zmqpp::context & context, const std::string & topic,
+    const std::string & endpoint =
+      perception_camera_driver::resolve(perception_camera_driver::Transport::kTcp, "*", 8000));
+  void startPoll();
 
 private:
+  void poll();
   zmqpp::socket socket_;
+  std::thread thread_;
+  zmqpp::poller poller_;
 };
 }  // namespace perception_camera_direver
 

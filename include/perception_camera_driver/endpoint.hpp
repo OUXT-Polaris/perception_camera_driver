@@ -12,17 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <perception_camera_driver/image_subscriber_component.hpp>
+#ifndef PERCEPTION_CAMERA_DRIVER__ENDPOINT_HPP_
+#define PERCEPTION_CAMERA_DRIVER__ENDPOINT_HPP_
 
-namespace perception_camera_direver
-{
-ImageSubscriberComponent::ImageSubscriberComponent(const rclcpp::NodeOptions & options)
-: rclcpp::Node("image_subscriber", options),
-  subscriber_(
-    zmqpp::context(), "image_raw",
-    perception_camera_driver::resolve(perception_camera_driver::Transport::kTcp, "*", 8000))
-{
-}
+#include <string>
 
-// void ImageSubscriberComponent::startPoll() {}
-}  // namespace perception_camera_direver
+namespace perception_camera_driver
+{
+enum class Transport { kInproc = 0, kTcp = 1, kUdp = 2 };
+
+std::string resolve(Transport transport, const std::string & address, std::uint32_t port);
+std::string resolve(const std::string & socket_name);
+}  // namespace perception_camera_driver
+
+#endif  // PERCEPTION_CAMERA_DRIVER__ENDPOINT_HPP_

@@ -40,6 +40,25 @@ target_link_libraries(proto
 
 ament_auto_add_library(image_subscriber_component SHARED
   src/image_subscriber_component.cpp
+  src/subscriber.cpp
+  src/endpoint.cpp
+)
+
+ament_auto_add_executable(perception_camera_driver_node
+  src/perception_camera_driver_node.cpp
+)
+
+target_link_libraries(image_subscriber_component
+  ${PROTOBUF_LIBRARY}
+  zmqpp
+  zmq
+)
+
+target_link_libraries(perception_camera_driver_node
+  ${PROTOBUF_LIBRARY}
+  zmqpp
+  zmq
+  image_subscriber_component
 )
 
 install(TARGETS image_subscriber_component
@@ -48,6 +67,11 @@ install(TARGETS image_subscriber_component
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin
   INCLUDES DESTINATION include)
+
+install(TARGETS
+  perception_camera_driver_node
+  DESTINATION lib/perception_camera_driver
+)
 
 install(
   FILES ${PROTO_HDRS}

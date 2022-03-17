@@ -15,11 +15,6 @@
 #ifndef PERCEPTION_CAMERA_DRIVER__IMAGE_SUBSCRIBER_COMPONENT_HPP_
 #define PERCEPTION_CAMERA_DRIVER__IMAGE_SUBSCRIBER_COMPONENT_HPP_
 
-#include <image_transport/image_transport.hpp>
-#include <perception_camera_driver/subscriber.hpp>
-#include <rclcpp/rclcpp.hpp>
-#include <sensor_msgs/msg/image.hpp>
-
 #if __cplusplus
 extern "C" {
 #endif
@@ -64,6 +59,11 @@ extern "C" {
 }  // extern "C"
 #endif
 
+#include <image_transport/image_transport.hpp>
+#include <perception_camera_driver/subscriber.hpp>
+#include <rclcpp/rclcpp.hpp>
+#include <sensor_msgs/msg/image.hpp>
+
 namespace perception_camera_direver
 {
 class ImageSubscriberComponent : public rclcpp::Node
@@ -74,6 +74,7 @@ public:
 
 private:
   image_transport::Publisher image_pub_;
+  perception_camera_direver::Subscriber subscriber_;
 };
 }  // namespace perception_camera_direver
 
