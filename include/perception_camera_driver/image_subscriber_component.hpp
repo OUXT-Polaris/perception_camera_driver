@@ -59,12 +59,14 @@ extern "C" {
 }  // extern "C"
 #endif
 
+#include <cv_bridge/cv_bridge.h>
+
 #include <image_transport/image_transport.hpp>
 #include <perception_camera_driver/subscriber.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/image.hpp>
 
-namespace perception_camera_direver
+namespace perception_camera_driver
 {
 class ImageSubscriberComponent : public rclcpp::Node
 {
@@ -73,9 +75,11 @@ public:
   explicit ImageSubscriberComponent(const rclcpp::NodeOptions & options);
 
 private:
+  void messageCallback(const zmqpp::message & message);
+  void imageCallback(const cv::Mat & image);
   image_transport::Publisher image_pub_;
   perception_camera_direver::Subscriber subscriber_;
 };
-}  // namespace perception_camera_direver
+}  // namespace perception_camera_driver
 
 #endif  // PERCEPTION_CAMERA_DRIVER__IMAGE_SUBSCRIBER_COMPONENT_HPP_

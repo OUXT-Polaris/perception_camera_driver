@@ -25,7 +25,7 @@ int main(int argc, char * argv[])
   google::InstallFailureSignalHandler();
   rclcpp::init(argc, argv);
   rclcpp::NodeOptions options;
-  auto component = std::make_shared<perception_camera_direver::ImageSubscriberComponent>(options);
+  auto component = std::make_shared<perception_camera_driver::ImageSubscriberComponent>(options);
   rclcpp::spin(component);
   rclcpp::shutdown();
   return 0;

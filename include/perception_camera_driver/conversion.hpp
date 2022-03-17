@@ -21,14 +21,14 @@
 #include <opencv2/opencv.hpp>
 #include <zmqpp/zmqpp.hpp>
 
-namespace perception_camera_direver
+namespace perception_camera_driver
 {
 cv::Mat convert(const perception_camera_app::Image & image);
 perception_camera_app::Image convert(const cv::Mat & image);
 perception_camera_app::ImageStamped convert(
   const cv::Mat & image, const std::chrono::system_clock::time_point & time);
-Time convert(const std::chrono::system_clock::time_point & time);
-Time now();
+perception_camera_app::Time convert(const std::chrono::system_clock::time_point & time);
+perception_camera_app::Time now();
 
 template <typename Proto>
 void toZMQ(const Proto & proto, zmqpp::message & msg)
@@ -44,6 +44,6 @@ void toProto(const zmqpp::message & msg, Proto & proto)
   std::string serialized_str = msg.get(0);
   proto.ParseFromString(serialized_str);
 }
-}  // namespace perception_camera_direver
+}  // namespace perception_camera_driver
 
 #endif  // PERCEPTION_CAMERA_DRIVER__CONVERSION_HPP_

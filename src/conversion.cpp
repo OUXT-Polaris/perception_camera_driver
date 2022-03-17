@@ -14,7 +14,7 @@
 
 #include <perception_camera_driver/conversion.hpp>
 
-namespace perception_camera_app
+namespace perception_camera_driver
 {
 cv::Mat convert(const perception_camera_app::Image & image)
 {
@@ -91,9 +91,9 @@ perception_camera_app::Image convert(const cv::Mat & image)
   throw std::runtime_error("unsupported image format!!");
 }
 
-Time convert(const std::chrono::system_clock::time_point & time)
+perception_camera_app::Time convert(const std::chrono::system_clock::time_point & time)
 {
-  Time proto;
+  perception_camera_app::Time proto;
   std::int64_t seconds =
     std::chrono::duration_cast<std::chrono::seconds>(time.time_since_epoch()).count();
   proto.set_sec(seconds);
@@ -103,14 +103,14 @@ Time convert(const std::chrono::system_clock::time_point & time)
   return proto;
 }
 
-Time now() { return convert(std::chrono::system_clock::now()); }
+perception_camera_app::Time now() { return convert(std::chrono::system_clock::now()); }
 
 perception_camera_app::ImageStamped convert(
   const cv::Mat & image, const std::chrono::system_clock::time_point & time)
 {
   perception_camera_app::ImageStamped proto;
-  *proto.mutable_image() = perception_camera_app::convert(image);
+  *proto.mutable_image() = convert(image);
   *proto.mutable_stamp() = convert(time);
   return proto;
 }
-}  // namespace perception_camera_app
+}  // namespace perception_camera_driver

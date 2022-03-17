@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <perception_camera_driver/conversion.hpp>
 #include <perception_camera_driver/image_subscriber_component.hpp>
 
-namespace perception_camera_direver
+namespace perception_camera_driver
 {
 ImageSubscriberComponent::ImageSubscriberComponent(const rclcpp::NodeOptions & options)
 : rclcpp::Node("image_subscriber", options),
@@ -22,7 +23,28 @@ ImageSubscriberComponent::ImageSubscriberComponent(const rclcpp::NodeOptions & o
     "image_raw",
     perception_camera_driver::resolve(perception_camera_driver::Transport::kTcp, "localhost", 8000))
 {
+  image_pub_ = image_transport::create_publisher(this, "image_raw");
+}
+
+void ImageSubscriberComponent::imageCallback(const cv::Mat & image)
+{
+  /*
+  if (image_pub_.getNumSubscribers() < 1) {
+    return;
+  }
+  */
+  std_msgs::msg::Header header;
+  sensor_msgs::msg::Image::SharedPtr rect_image =
+    cv_bridge::CvImage(header, "bgr8", image).toImageMsg();
+  image_pub_.publish(rect_image);
+}
+
+void ImageSubscriberComponent::messageCallback(const zmqpp::message & message)
+{
+  perception_camera_app::ImageStamped proto;
+  toProto(message, proto);
+  imageCallback(convert(proto.image()));
 }
 
 // void ImageSubscriberComponent::startPoll() {}
-}  // namespace perception_camera_direver
+}  // namespace perception_camera_driver

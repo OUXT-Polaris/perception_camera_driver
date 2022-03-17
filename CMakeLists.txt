@@ -42,6 +42,7 @@ ament_auto_add_library(image_subscriber_component SHARED
   src/image_subscriber_component.cpp
   src/subscriber.cpp
   src/endpoint.cpp
+  src/conversion.cpp
 )
 
 ament_auto_add_executable(perception_camera_driver_node
@@ -52,6 +53,7 @@ target_link_libraries(image_subscriber_component
   ${PROTOBUF_LIBRARY}
   zmqpp
   zmq
+  proto
 )
 
 target_link_libraries(perception_camera_driver_node
@@ -60,6 +62,7 @@ target_link_libraries(perception_camera_driver_node
   zmq
   image_subscriber_component
   glog
+  proto
 )
 
 install(TARGETS image_subscriber_component
