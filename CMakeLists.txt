@@ -72,6 +72,13 @@ install(TARGETS image_subscriber_component
   RUNTIME DESTINATION bin
   INCLUDES DESTINATION include)
 
+  install(TARGETS proto
+  EXPORT export_proto
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin
+  INCLUDES DESTINATION include)
+
 install(TARGETS
   perception_camera_driver_node
   DESTINATION lib/perception_camera_driver
