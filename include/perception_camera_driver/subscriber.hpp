@@ -28,13 +28,14 @@ class Subscriber
 {
 public:
   explicit Subscriber(
-    const zmqpp::context & context, const std::string & topic,
-    const std::string & endpoint =
-      perception_camera_driver::resolve(perception_camera_driver::Transport::kTcp, "*", 8000));
+    const std::string & topic, const std::string & endpoint = perception_camera_driver::resolve(
+                                 perception_camera_driver::Transport::kTcp, "localhost", 8000));
   void startPoll();
+  const std::string endpoint;
 
 private:
   void poll();
+  const zmqpp::context context_;
   zmqpp::socket socket_;
   std::thread thread_;
   zmqpp::poller poller_;

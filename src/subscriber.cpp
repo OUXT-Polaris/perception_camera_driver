@@ -16,12 +16,13 @@
 
 namespace perception_camera_direver
 {
-Subscriber::Subscriber(
-  const zmqpp::context & context, const std::string & topic, const std::string & endpoint)
-: socket_(context, zmqpp::socket_type::subscribe)
+Subscriber::Subscriber(const std::string & topic, const std::string & endpoint)
+: endpoint(endpoint), context_(zmqpp::context()), socket_(context_, zmqpp::socket_type::subscribe)
 {
   socket_.connect(endpoint);
   socket_.subscribe(topic);
+  poller_.add(socket_);
+  thread_ = std::thread(&Subscriber::startPoll, this);
 }
 
 void Subscriber::startPoll()
@@ -29,6 +30,7 @@ void Subscriber::startPoll()
   while (rclcpp::ok()) {
     poll();
   }
+  socket_.disconnect(endpoint);
 }
 
 void Subscriber::poll()

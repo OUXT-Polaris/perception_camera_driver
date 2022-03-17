@@ -19,8 +19,8 @@ namespace perception_camera_direver
 ImageSubscriberComponent::ImageSubscriberComponent(const rclcpp::NodeOptions & options)
 : rclcpp::Node("image_subscriber", options),
   subscriber_(
-    zmqpp::context(), "image_raw",
-    perception_camera_driver::resolve(perception_camera_driver::Transport::kTcp, "*", 8000))
+    "image_raw",
+    perception_camera_driver::resolve(perception_camera_driver::Transport::kTcp, "localhost", 8000))
 {
 }
 

@@ -59,6 +59,7 @@ target_link_libraries(perception_camera_driver_node
   zmqpp
   zmq
   image_subscriber_component
+  glog
 )
 
 install(TARGETS image_subscriber_component

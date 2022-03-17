@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <glog/logging.h>
+
 #include <memory>
 #include <perception_camera_driver/image_subscriber_component.hpp>
 #include <rclcpp/rclcpp.hpp>
@@ -19,6 +21,8 @@
 
 int main(int argc, char * argv[])
 {
+  google::InitGoogleLogging(argv[0]);
+  google::InstallFailureSignalHandler();
   rclcpp::init(argc, argv);
   rclcpp::NodeOptions options;
   auto component = std::make_shared<perception_camera_direver::ImageSubscriberComponent>(options);
