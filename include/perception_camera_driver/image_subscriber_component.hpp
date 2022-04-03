@@ -86,6 +86,7 @@ private:
   std::string ip_address_;
   int port_;
   std::string endpoint_;
+  std::string frame_id_;
 };
 }  // namespace perception_camera_driver
 

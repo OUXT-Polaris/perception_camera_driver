@@ -21,6 +21,7 @@ from launch.substitutions.launch_configuration import LaunchConfiguration
 def generate_launch_description():
     ip_address = LaunchConfiguration("ip_address", default="localhost")
     port = LaunchConfiguration("port", default=8000)
+    frame_id = LaunchConfiguration("frame_id", default="frame_id")
     description = LaunchDescription(
         [
             DeclareLaunchArgument(
@@ -31,10 +32,17 @@ def generate_launch_description():
             DeclareLaunchArgument(
                 "port", default_value=port, description="Port of perception camera."
             ),
+            DeclareLaunchArgument(
+                "frame_id",
+                default_value=port,
+                description="Frame ID of perception camera.",
+            ),
             Node(
                 package="perception_camera_driver",
                 executable="perception_camera_driver_node",
-                parameters=[{"ip_address": ip_address, "port": port}],
+                parameters=[
+                    {"ip_address": ip_address, "port": port, "frame_id": frame_id}
+                ],
             ),
         ]
     )

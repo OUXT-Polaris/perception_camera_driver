@@ -25,6 +25,8 @@ ImageSubscriberComponent::ImageSubscriberComponent(const rclcpp::NodeOptions & o
   get_parameter("ip_address", ip_address_);
   declare_parameter<int>("port", 8000);
   get_parameter("port", port_);
+  declare_parameter("frame_id", "base_link");
+  get_parameter<std::string>("frame_id", frame_id_);
   endpoint_ = perception_camera_driver::resolve(
     perception_camera_driver::Transport::kTcp, ip_address_, port_);
   image_pub_ = image_transport::create_publisher(this, "image_raw");
