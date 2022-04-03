@@ -32,7 +32,6 @@ class Subscriber
 public:
   explicit Subscriber(
     std::function<void(const zmqpp::message & message)> callback, const rclcpp::Logger & logger,
-    const std::string & topic,
     const std::string & endpoint = perception_camera_driver::resolve(
       perception_camera_driver::Transport::kTcp, "localhost", 8000));
   ~Subscriber();

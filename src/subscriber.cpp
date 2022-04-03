@@ -18,7 +18,7 @@ namespace perception_camera_direver
 {
 Subscriber::Subscriber(
   std::function<void(const zmqpp::message & message)> callback, const rclcpp::Logger & logger,
-  const std::string & topic, const std::string & endpoint)
+  const std::string & endpoint)
 : callback_(callback),
   logger_(logger),
   endpoint(endpoint),

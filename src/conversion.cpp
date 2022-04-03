@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <perception_camera_driver/conversion.hpp>
+#include <rclcpp/rclcpp.hpp>
 
 namespace perception_camera_driver
 {

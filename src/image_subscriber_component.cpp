@@ -31,7 +31,7 @@ ImageSubscriberComponent::ImageSubscriberComponent(const rclcpp::NodeOptions & o
   subscriber_ = std::unique_ptr<perception_camera_direver::Subscriber>(
     new perception_camera_direver::Subscriber(
       std::bind(&ImageSubscriberComponent::messageCallback, this, std::placeholders::_1),
-      get_logger(), "image_raw", endpoint_));
+      get_logger(), endpoint_));
 }
 
 void ImageSubscriberComponent::imageCallback(const cv::Mat & image)
