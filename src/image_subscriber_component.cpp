@@ -14,6 +14,7 @@
 
 #include <perception_camera_driver/conversion.hpp>
 #include <perception_camera_driver/image_subscriber_component.hpp>
+#include <rclcpp_components/register_node_macro.hpp>
 
 namespace perception_camera_driver
 {
@@ -28,16 +29,16 @@ ImageSubscriberComponent::ImageSubscriberComponent(const rclcpp::NodeOptions & o
     perception_camera_driver::Transport::kTcp, ip_address_, port_);
   image_pub_ = image_transport::create_publisher(this, "image_raw");
   subscriber_ = std::unique_ptr<perception_camera_direver::Subscriber>(
-    new perception_camera_direver::Subscriber(get_logger(), "image_raw", endpoint_));
+    new perception_camera_direver::Subscriber(
+      std::bind(&ImageSubscriberComponent::messageCallback, this, std::placeholders::_1),
+      get_logger(), "image_raw", endpoint_));
 }
 
 void ImageSubscriberComponent::imageCallback(const cv::Mat & image)
 {
-  /*
   if (image_pub_.getNumSubscribers() < 1) {
     return;
   }
-  */
   std_msgs::msg::Header header;
   sensor_msgs::msg::Image::SharedPtr rect_image =
     cv_bridge::CvImage(header, "bgr8", image).toImageMsg();
@@ -51,5 +52,6 @@ void ImageSubscriberComponent::messageCallback(const zmqpp::message & message)
   imageCallback(convert(proto.image()));
 }
 
-// void ImageSubscriberComponent::startPoll() {}
 }  // namespace perception_camera_driver
+
+RCLCPP_COMPONENTS_REGISTER_NODE(perception_camera_driver::ImageSubscriberComponent)

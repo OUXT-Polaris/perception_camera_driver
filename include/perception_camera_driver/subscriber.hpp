@@ -17,7 +17,10 @@
 
 #include <perception_camera_app.pb.h>
 
+#include <functional>
 #include <memory>
+#include <mutex>
+#include <perception_camera_driver/conversion.hpp>
 #include <perception_camera_driver/endpoint.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <zmqpp/zmqpp.hpp>
@@ -28,13 +31,15 @@ class Subscriber
 {
 public:
   explicit Subscriber(
-    const rclcpp::Logger & logger, const std::string & topic,
+    std::function<void(const zmqpp::message & message)> callback, const rclcpp::Logger & logger,
+    const std::string & topic,
     const std::string & endpoint = perception_camera_driver::resolve(
       perception_camera_driver::Transport::kTcp, "localhost", 8000));
   ~Subscriber();
   void startPoll();
 
 private:
+  std::function<void(const zmqpp::message & message)> callback_;
   rclcpp::Logger logger_;
 
 public:

@@ -7,10 +7,10 @@ endif()
 
 # find dependencies
 find_package(ament_cmake_auto REQUIRED)
-find_package(OpenCV REQUIRED)
-
-include(FindProtobuf REQUIRED)
 ament_auto_find_build_dependencies()
+
+find_package(OpenCV REQUIRED)
+include(FindProtobuf REQUIRED)
 
 file(DOWNLOAD 
   https://raw.githubusercontent.com/OUXT-Polaris/perception_camera_app/master/proto/perception_camera_app.proto
@@ -72,7 +72,10 @@ install(TARGETS image_subscriber_component
   RUNTIME DESTINATION bin
   INCLUDES DESTINATION include)
 
-  install(TARGETS proto
+rclcpp_components_register_nodes(image_subscriber_component
+  "perception_camera_driver::ImageSubscriberComponent")
+
+install(TARGETS proto
   EXPORT export_proto
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
@@ -87,6 +90,10 @@ install(TARGETS
 install(
   FILES ${PROTO_HDRS}
   DESTINATION include
+)
+
+install(DIRECTORY launch
+  DESTINATION share/${PROJECT_NAME}
 )
 
 if(BUILD_TESTING)
