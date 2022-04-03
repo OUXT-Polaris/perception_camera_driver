@@ -7,10 +7,10 @@ endif()
 
 # find dependencies
 find_package(ament_cmake_auto REQUIRED)
-find_package(OpenCV REQUIRED)
-
-include(FindProtobuf REQUIRED)
 ament_auto_find_build_dependencies()
+
+find_package(OpenCV REQUIRED)
+include(FindProtobuf REQUIRED)
 
 file(DOWNLOAD 
   https://raw.githubusercontent.com/OUXT-Polaris/perception_camera_app/master/proto/perception_camera_app.proto
