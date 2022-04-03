@@ -27,6 +27,7 @@ Subscriber::Subscriber(
   socket_.connect(endpoint);
   socket_.subscribe(topic);
   poller_.add(socket_);
+  RCLCPP_INFO_STREAM(logger_, "start polling : " << endpoint);
   thread_ = std::thread(&Subscriber::startPoll, this);
 }
 
@@ -37,6 +38,7 @@ void Subscriber::startPoll()
   while (rclcpp::ok()) {
     poll();
   }
+  RCLCPP_INFO_STREAM(logger_, "start disconnecting : " << endpoint);
   socket_.disconnect(endpoint);
 }
 
