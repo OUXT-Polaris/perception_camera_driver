@@ -16,9 +16,14 @@
 
 namespace perception_camera_direver
 {
-Subscriber::Subscriber(const std::string & topic, const std::string & endpoint)
-: endpoint(endpoint), context_(zmqpp::context()), socket_(context_, zmqpp::socket_type::subscribe)
+Subscriber::Subscriber(
+  const rclcpp::Logger & logger, const std::string & topic, const std::string & endpoint)
+: logger_(logger),
+  endpoint(endpoint),
+  context_(zmqpp::context()),
+  socket_(context_, zmqpp::socket_type::subscribe)
 {
+  RCLCPP_INFO_STREAM(logger_, "start connecting to endpoint : " << endpoint);
   socket_.connect(endpoint);
   socket_.subscribe(topic);
   poller_.add(socket_);
