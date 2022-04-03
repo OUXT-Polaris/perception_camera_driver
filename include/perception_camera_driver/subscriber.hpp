@@ -50,6 +50,7 @@ private:
   zmqpp::socket socket_;
   std::thread thread_;
   zmqpp::poller poller_;
+  std::mutex mutex_;
 };
 }  // namespace perception_camera_direver
 

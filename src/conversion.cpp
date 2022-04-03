@@ -33,9 +33,7 @@ cv::Mat convert(const perception_camera_app::Image & image)
   }
   if (image.format() == perception_camera_app::ImageFormat::CV8UC3) {
     std::vector<uint8_t> bytes(image.data().begin(), image.data().end());
-    const auto mat = cv::Mat(image.height(), image.width(), CV_8UC3, &bytes[0]);
-    RCLCPP_INFO_STREAM(rclcpp::get_logger("logger"), mat.at<cv::Vec3b>(719,1279)[0] << "," << mat.at<cv::Vec3b>(719,1279)[1] << "," << mat.at<cv::Vec3b>(719,1279)[2]);
-    return mat;
+    return cv::Mat(image.height(), image.width(), CV_8UC3, &bytes[0]);
   }
   if (image.format() == perception_camera_app::ImageFormat::CV8UC4) {
     std::vector<uint8_t> bytes(image.data().begin(), image.data().end());
