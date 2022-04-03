@@ -17,8 +17,10 @@
 namespace perception_camera_direver
 {
 Subscriber::Subscriber(
-  const rclcpp::Logger & logger, const std::string & topic, const std::string & endpoint)
-: logger_(logger),
+  std::function<void(const zmqpp::message & message)> callback, const rclcpp::Logger & logger,
+  const std::string & topic, const std::string & endpoint)
+: callback_(callback),
+  logger_(logger),
   endpoint(endpoint),
   context_(zmqpp::context()),
   socket_(context_, zmqpp::socket_type::subscribe)
@@ -49,6 +51,7 @@ void Subscriber::poll()
   if (poller_.has_input(socket_)) {
     zmqpp::message message;
     socket_.receive(message);
+    callback_(message);
   }
 }
 }  // namespace perception_camera_direver

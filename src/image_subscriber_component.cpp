@@ -29,7 +29,9 @@ ImageSubscriberComponent::ImageSubscriberComponent(const rclcpp::NodeOptions & o
     perception_camera_driver::Transport::kTcp, ip_address_, port_);
   image_pub_ = image_transport::create_publisher(this, "image_raw");
   subscriber_ = std::unique_ptr<perception_camera_direver::Subscriber>(
-    new perception_camera_direver::Subscriber(get_logger(), "image_raw", endpoint_));
+    new perception_camera_direver::Subscriber(
+      std::bind(&ImageSubscriberComponent::messageCallback, this, std::placeholders::_1),
+      get_logger(), "image_raw", endpoint_));
 }
 
 void ImageSubscriberComponent::imageCallback(const cv::Mat & image)
