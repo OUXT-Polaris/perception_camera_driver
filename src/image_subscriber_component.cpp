@@ -18,12 +18,17 @@
 namespace perception_camera_driver
 {
 ImageSubscriberComponent::ImageSubscriberComponent(const rclcpp::NodeOptions & options)
-: rclcpp::Node("image_subscriber", options),
-  subscriber_(
-    "image_raw",
-    perception_camera_driver::resolve(perception_camera_driver::Transport::kTcp, "localhost", 8000))
+: rclcpp::Node("image_subscriber", options)
 {
+  declare_parameter<std::string>("ip_address", "localhost");
+  get_parameter("ip_address", ip_address_);
+  declare_parameter<int>("port", 8000);
+  get_parameter("port", port_);
+  endpoint_ = perception_camera_driver::resolve(
+    perception_camera_driver::Transport::kTcp, ip_address_, port_);
   image_pub_ = image_transport::create_publisher(this, "image_raw");
+  subscriber_ = std::unique_ptr<perception_camera_direver::Subscriber>(
+    new perception_camera_direver::Subscriber(get_logger(), "image_raw", endpoint_));
 }
 
 void ImageSubscriberComponent::imageCallback(const cv::Mat & image)

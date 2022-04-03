@@ -62,6 +62,7 @@ extern "C" {
 #include <cv_bridge/cv_bridge.h>
 
 #include <image_transport/image_transport.hpp>
+#include <memory>
 #include <perception_camera_driver/subscriber.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/image.hpp>
@@ -73,12 +74,18 @@ class ImageSubscriberComponent : public rclcpp::Node
 public:
   PERCEPTION_CAMERA_DRIVER_IMAGE_SUBSCRIBER_COMPONENT_PUBLIC
   explicit ImageSubscriberComponent(const rclcpp::NodeOptions & options);
+  std::string getIpAddress() const { return ip_address_; }
+  int getPort() const { return port_; }
+  std::string getEndpoint() const { return endpoint_; }
 
 private:
   void messageCallback(const zmqpp::message & message);
   void imageCallback(const cv::Mat & image);
   image_transport::Publisher image_pub_;
-  perception_camera_direver::Subscriber subscriber_;
+  std::unique_ptr<perception_camera_direver::Subscriber> subscriber_;
+  std::string ip_address_;
+  int port_;
+  std::string endpoint_;
 };
 }  // namespace perception_camera_driver
 
