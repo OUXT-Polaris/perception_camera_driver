@@ -80,7 +80,7 @@ public:
 
 private:
   void messageCallback(const zmqpp::message & message);
-  void imageCallback(const cv::Mat & image);
+  void imageCallback(const cv::Mat & image, const rclcpp::Time & stamp);
   image_transport::Publisher image_pub_;
   std::unique_ptr<perception_camera_direver::Subscriber> subscriber_;
   std::string ip_address_;

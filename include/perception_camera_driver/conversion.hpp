@@ -19,6 +19,7 @@
 
 #include <chrono>
 #include <opencv2/opencv.hpp>
+#include <rclcpp/rclcpp.hpp>
 #include <zmqpp/zmqpp.hpp>
 
 namespace perception_camera_driver
@@ -29,6 +30,7 @@ perception_camera_app::ImageStamped convert(
   const cv::Mat & image, const std::chrono::system_clock::time_point & time);
 perception_camera_app::Time convert(const std::chrono::system_clock::time_point & time);
 perception_camera_app::Time now();
+rclcpp::Time convert(const perception_camera_app::Time & time);
 
 template <typename Proto>
 void toZMQ(const Proto & proto, zmqpp::message & msg)

@@ -34,7 +34,7 @@ def generate_launch_description():
             ),
             DeclareLaunchArgument(
                 "frame_id",
-                default_value=port,
+                default_value=frame_id,
                 description="Frame ID of perception camera.",
             ),
             Node(

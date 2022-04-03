@@ -25,7 +25,7 @@ ImageSubscriberComponent::ImageSubscriberComponent(const rclcpp::NodeOptions & o
   get_parameter("ip_address", ip_address_);
   declare_parameter<int>("port", 8000);
   get_parameter("port", port_);
-  declare_parameter("frame_id", "base_link");
+  declare_parameter<std::string>("frame_id", "base_link");
   get_parameter<std::string>("frame_id", frame_id_);
   endpoint_ = perception_camera_driver::resolve(
     perception_camera_driver::Transport::kTcp, ip_address_, port_);
@@ -36,7 +36,7 @@ ImageSubscriberComponent::ImageSubscriberComponent(const rclcpp::NodeOptions & o
       get_logger(), endpoint_));
 }
 
-void ImageSubscriberComponent::imageCallback(const cv::Mat & image)
+void ImageSubscriberComponent::imageCallback(const cv::Mat & image, const rclcpp::Time & stamp)
 {
   if (image_pub_.getNumSubscribers() < 1) {
     return;
@@ -44,6 +44,8 @@ void ImageSubscriberComponent::imageCallback(const cv::Mat & image)
   std_msgs::msg::Header header;
   sensor_msgs::msg::Image::SharedPtr rect_image =
     cv_bridge::CvImage(header, "bgr8", image).toImageMsg();
+  header.frame_id = frame_id_;
+  header.stamp = stamp;
   image_pub_.publish(rect_image);
 }
 
@@ -51,7 +53,7 @@ void ImageSubscriberComponent::messageCallback(const zmqpp::message & message)
 {
   perception_camera_app::ImageStamped proto;
   toProto(message, proto);
-  imageCallback(convert(proto.image()));
+  imageCallback(convert(proto.image()), convert(proto.stamp()));
 }
 
 }  // namespace perception_camera_driver

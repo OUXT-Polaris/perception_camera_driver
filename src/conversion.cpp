@@ -106,6 +106,11 @@ perception_camera_app::Time convert(const std::chrono::system_clock::time_point 
 
 perception_camera_app::Time now() { return convert(std::chrono::system_clock::now()); }
 
+rclcpp::Time convert(const perception_camera_app::Time & time)
+{
+  return rclcpp::Time(time.sec(), time.nanosec());
+}
+
 perception_camera_app::ImageStamped convert(
   const cv::Mat & image, const std::chrono::system_clock::time_point & time)
 {
