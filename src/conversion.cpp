@@ -33,7 +33,7 @@ cv::Mat convert(const perception_camera_app::Image & image)
   }
   if (image.format() == perception_camera_app::ImageFormat::CV8UC3) {
     std::vector<unsigned char> bytes(image.data().begin(), image.data().end());
-    return cv::Mat(image.height(), image.width(), CV_8UC2, &bytes[0]);
+    return cv::Mat(image.height(), image.width(), CV_8UC3, &bytes[0]);
   }
   if (image.format() == perception_camera_app::ImageFormat::CV8UC4) {
     std::vector<unsigned char> bytes(image.data().begin(), image.data().end());

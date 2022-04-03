@@ -42,10 +42,10 @@ void ImageSubscriberComponent::imageCallback(const cv::Mat & image, const rclcpp
     return;
   }
   std_msgs::msg::Header header;
-  sensor_msgs::msg::Image::SharedPtr rect_image =
-    cv_bridge::CvImage(header, "bgr8", image).toImageMsg();
   header.frame_id = frame_id_;
   header.stamp = stamp;
+  sensor_msgs::msg::Image::SharedPtr rect_image =
+    cv_bridge::CvImage(header, "bgr8", image).toImageMsg();
   image_pub_.publish(rect_image);
 }
 
