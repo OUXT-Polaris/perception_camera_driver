@@ -72,7 +72,10 @@ install(TARGETS image_subscriber_component
   RUNTIME DESTINATION bin
   INCLUDES DESTINATION include)
 
-  install(TARGETS proto
+rclcpp_components_register_nodes(image_subscriber_component
+  "perception_camera_driver::ImageSubscriberComponent")
+
+install(TARGETS proto
   EXPORT export_proto
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
@@ -87,6 +90,10 @@ install(TARGETS
 install(
   FILES ${PROTO_HDRS}
   DESTINATION include
+)
+
+install(DIRECTORY launch
+  DESTINATION share/${PROJECT_NAME}
 )
 
 if(BUILD_TESTING)
