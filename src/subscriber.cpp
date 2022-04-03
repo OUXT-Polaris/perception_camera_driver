@@ -27,7 +27,7 @@ Subscriber::Subscriber(
 {
   RCLCPP_INFO_STREAM(logger_, "start connecting to endpoint : " << endpoint);
   socket_.connect(endpoint);
-  socket_.subscribe(topic);
+  socket_.subscribe("");
   poller_.add(socket_);
   RCLCPP_INFO_STREAM(logger_, "start polling : " << endpoint);
   thread_ = std::thread(&Subscriber::startPoll, this);
