@@ -39,22 +39,17 @@ ImageSubscriberComponent::ImageSubscriberComponent(const rclcpp::NodeOptions & o
 void ImageSubscriberComponent::imageCallback(const cv::Mat & image, const rclcpp::Time & stamp)
 {
   cv::imshow("title", image);
-  cv::waitKey(10);
+  cv::waitKey(1);
   /*
   if (image_pub_.getNumSubscribers() < 1) {
     return;
   }
-  RCLCPP_INFO_STREAM(get_logger(), __FILE__ << "," << __LINE__);
   */
-  // RCLCPP_INFO_STREAM(get_logger(), "imageCallback : " << static_cast<int>(image.at<cv::Vec3b>(0,0)[0]));
   std_msgs::msg::Header header;
   header.frame_id = frame_id_;
   header.stamp = stamp;
-  sensor_msgs::msg::Image::SharedPtr image_msg =
-    cv_bridge::CvImage(header, "rgb8", image).toImageMsg();
-  /*
-  RCLCPP_INFO_STREAM(get_logger(), __FILE__ << "," << __LINE__);
-  */
+  sensor_msgs::msg::Image image_msg;
+  cv_bridge::CvImage(header, "rgb8", image).toImageMsg(image_msg);
   image_pub_.publish(image_msg);
 }
 
