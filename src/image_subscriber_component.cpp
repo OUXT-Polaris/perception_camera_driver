@@ -38,19 +38,20 @@ ImageSubscriberComponent::ImageSubscriberComponent(const rclcpp::NodeOptions & o
 
 void ImageSubscriberComponent::imageCallback(const cv::Mat & image, const rclcpp::Time & stamp)
 {
-  cv::imshow("title", image);
-  cv::waitKey(1);
-  /*
-  if (image_pub_.getNumSubscribers() < 1) {
-    return;
-  }
-  */
   std_msgs::msg::Header header;
   header.frame_id = frame_id_;
   header.stamp = stamp;
-  sensor_msgs::msg::Image image_msg;
-  cv_bridge::CvImage(header, "rgb8", image).toImageMsg(image_msg);
-  image_pub_.publish(image_msg);
+  sensor_msgs::msg::Image ros_image;
+  ros_image.header = header;
+  ros_image.height = image.rows;
+  ros_image.width = image.cols;
+  ros_image.encoding = "bgr8";
+  ros_image.is_bigendian = false;
+  ros_image.step = image.cols * image.elemSize();
+  std::vector<uint8_t> image_vec;
+  image_vec.assign((uint8_t *)image.datastart, (uint8_t *)image.dataend);
+  ros_image.data = image_vec;
+  image_pub_.publish(ros_image);
 }
 
 void ImageSubscriberComponent::messageCallback(const zmqpp::message & message)
