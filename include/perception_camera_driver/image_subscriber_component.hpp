@@ -80,12 +80,13 @@ public:
 
 private:
   void messageCallback(const zmqpp::message & message);
-  void imageCallback(const cv::Mat & image);
+  void imageCallback(const cv::Mat & image, const rclcpp::Time & stamp);
   image_transport::Publisher image_pub_;
   std::unique_ptr<perception_camera_direver::Subscriber> subscriber_;
   std::string ip_address_;
   int port_;
   std::string endpoint_;
+  std::string frame_id_;
 };
 }  // namespace perception_camera_driver
 

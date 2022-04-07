@@ -25,31 +25,40 @@ ImageSubscriberComponent::ImageSubscriberComponent(const rclcpp::NodeOptions & o
   get_parameter("ip_address", ip_address_);
   declare_parameter<int>("port", 8000);
   get_parameter("port", port_);
+  declare_parameter<std::string>("frame_id", "base_link");
+  get_parameter<std::string>("frame_id", frame_id_);
   endpoint_ = perception_camera_driver::resolve(
     perception_camera_driver::Transport::kTcp, ip_address_, port_);
   image_pub_ = image_transport::create_publisher(this, "image_raw");
   subscriber_ = std::unique_ptr<perception_camera_direver::Subscriber>(
     new perception_camera_direver::Subscriber(
       std::bind(&ImageSubscriberComponent::messageCallback, this, std::placeholders::_1),
-      get_logger(), "image_raw", endpoint_));
+      get_logger(), endpoint_));
 }
 
-void ImageSubscriberComponent::imageCallback(const cv::Mat & image)
+void ImageSubscriberComponent::imageCallback(const cv::Mat & image, const rclcpp::Time & stamp)
 {
-  if (image_pub_.getNumSubscribers() < 1) {
-    return;
-  }
   std_msgs::msg::Header header;
-  sensor_msgs::msg::Image::SharedPtr rect_image =
-    cv_bridge::CvImage(header, "bgr8", image).toImageMsg();
-  image_pub_.publish(rect_image);
+  header.frame_id = frame_id_;
+  header.stamp = stamp;
+  sensor_msgs::msg::Image ros_image;
+  ros_image.header = header;
+  ros_image.height = image.rows;
+  ros_image.width = image.cols;
+  ros_image.encoding = "bgr8";
+  ros_image.is_bigendian = false;
+  ros_image.step = image.cols * image.elemSize();
+  std::vector<uint8_t> image_vec;
+  image_vec.assign((uint8_t *)image.datastart, (uint8_t *)image.dataend);
+  ros_image.data = image_vec;
+  image_pub_.publish(ros_image);
 }
 
 void ImageSubscriberComponent::messageCallback(const zmqpp::message & message)
 {
   perception_camera_app::ImageStamped proto;
   toProto(message, proto);
-  imageCallback(convert(proto.image()));
+  imageCallback(convert(proto.image()), convert(proto.stamp()));
 }
 
 }  // namespace perception_camera_driver
