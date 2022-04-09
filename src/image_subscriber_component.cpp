@@ -27,9 +27,12 @@ ImageSubscriberComponent::ImageSubscriberComponent(const rclcpp::NodeOptions & o
   get_parameter("port", port_);
   declare_parameter<std::string>("frame_id", "base_link");
   get_parameter<std::string>("frame_id", frame_id_);
+  std::string image_topic_name;
+  declare_parameter<std::string>("image_topic_name", "image_topic_name");
+  get_parameter<std::string>("image_topic_name", image_topic_name);
   endpoint_ = perception_camera_driver::resolve(
     perception_camera_driver::Transport::kTcp, ip_address_, port_);
-  image_pub_ = image_transport::create_publisher(this, "image_raw");
+  image_pub_ = image_transport::create_publisher(this, image_topic_name);
   subscriber_ = std::unique_ptr<perception_camera_direver::Subscriber>(
     new perception_camera_direver::Subscriber(
       std::bind(&ImageSubscriberComponent::messageCallback, this, std::placeholders::_1),

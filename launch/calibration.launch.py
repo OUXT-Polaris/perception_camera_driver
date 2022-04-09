@@ -12,18 +12,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
+from launch.actions import IncludeLaunchDescription, ExecuteProcess
 from launch.actions.declare_launch_argument import DeclareLaunchArgument
-from launch_ros.actions import Node
+from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions.launch_configuration import LaunchConfiguration
+from launch_ros.actions import Node
+
+
+import os
 
 
 def generate_launch_description():
+    perception_camera_driver_launch_file_dir = os.path.join(
+        get_package_share_directory("perception_camera_driver"), "launch"
+    )
     ip_address = LaunchConfiguration("ip_address", default="localhost")
     port = LaunchConfiguration("port", default=8000)
     frame_id = LaunchConfiguration("frame_id", default="frame_id")
-    image_topic_name = LaunchConfiguration("image_topic_name", default="image_raw")
-    description = LaunchDescription(
+    return LaunchDescription(
         [
             DeclareLaunchArgument(
                 "ip_address",
@@ -38,23 +46,30 @@ def generate_launch_description():
                 default_value=frame_id,
                 description="Frame ID of perception camera.",
             ),
-            DeclareLaunchArgument(
-                "image_topic_name",
-                default_value=image_topic_name,
-                description="Topic name of the image.",
+            IncludeLaunchDescription(
+                PythonLaunchDescriptionSource(
+                    [
+                        perception_camera_driver_launch_file_dir,
+                        "/single_camera.launch.py",
+                    ]
+                ),
+                launch_arguments={
+                    "ip_address": ip_address,
+                    "port": port,
+                    "frame_id": frame_id,
+                    "image_topic_name": "image",
+                }.items(),
             ),
-            Node(
-                package="perception_camera_driver",
-                executable="perception_camera_driver_node",
-                parameters=[
-                    {
-                        "ip_address": ip_address,
-                        "port": port,
-                        "frame_id": frame_id,
-                        "image_topic_name": image_topic_name,
-                    }
+            ExecuteProcess(
+                cmd=[
+                    "ros2",
+                    "run",
+                    "camera_calibration",
+                    "cameracalibrator",
+                    "--size=9x6 --square=0.024 --approximate=0.1 --no-service-check",
                 ],
+                output="screen",
+                shell=True,
             ),
         ]
     )
-    return description
