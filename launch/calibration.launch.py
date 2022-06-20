@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from ast import arguments
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription, ExecuteProcess
@@ -31,6 +32,10 @@ def generate_launch_description():
     ip_address = LaunchConfiguration("ip_address", default="localhost")
     port = LaunchConfiguration("port", default=8000)
     frame_id = LaunchConfiguration("frame_id", default="frame_id")
+    calibration_arguments = LaunchConfiguration(
+        "calibration_arguments",
+        default="--size=9x6 --square=0.024 --approximate=0.1 --no-service-check",
+    )
     return LaunchDescription(
         [
             DeclareLaunchArgument(
@@ -45,6 +50,11 @@ def generate_launch_description():
                 "frame_id",
                 default_value=frame_id,
                 description="Frame ID of perception camera.",
+            ),
+            DeclareLaunchArgument(
+                "calibration_arguments",
+                default_value=calibration_arguments,
+                description="Arguments of calibrator.",
             ),
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(
@@ -66,7 +76,7 @@ def generate_launch_description():
                     "run",
                     "camera_calibration",
                     "cameracalibrator",
-                    "--size=9x6 --square=0.024 --approximate=0.1 --no-service-check",
+                    calibration_arguments,
                 ],
                 output="screen",
                 shell=True,
