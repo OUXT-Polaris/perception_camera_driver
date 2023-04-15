@@ -51,15 +51,11 @@ ament_auto_add_executable(perception_camera_driver_node
 
 target_link_libraries(image_subscriber_component
   ${PROTOBUF_LIBRARY}
-  zmqpp
-  zmq
   proto
 )
 
 target_link_libraries(perception_camera_driver_node
   ${PROTOBUF_LIBRARY}
-  zmqpp
-  zmq
   image_subscriber_component
   glog
   proto
